@@ -32,12 +32,13 @@ public:
 private:
     Arrangement_2 _arr;
     Landmarks_pl  _pl;
+    Kernel*       _pKer;
 
     void verticalDecomposition(Kernel &ker);
-
     void addVerticalSegment(Vertex_handle v, CGAL::Object obj, Kernel &ker);
-
     void addFrame(const Polygon_2& outer_bound);
+    bool squaresFree( const TSMove& mv );
+
 };
 
 #endif 

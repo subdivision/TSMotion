@@ -1,7 +1,20 @@
 #include "TSPathFinder.h"
 #include "ConfigCheck.h"
 #include <CGAL/minkowski_sum_2.h>
+#include <math.h>
 
+#define EPS 0.0001
+
+bool eps_eq(const Point_2& p1, const Point_2& p2 )
+{
+    Number_type x1 = p1.x();
+    Number_type y1 = p1.y();
+    Number_type x2 = p2.x();
+    Number_type y2 = p2.y();
+    return (fabs(x1-x2) <= EPS) && (fabs(y1-y2) <= EPS);
+}
+
+//----------------------------------------------------------------------------
 void 
 polygon_split_observer::after_split_face( Face_handle f1, Face_handle f2, bool ) 
 {
@@ -68,8 +81,8 @@ ConfigCheck::ConfigCheck( const Polygon_2&          outer_obstacle,
     Polygon_set_2::Traits_2 traits;
     polygon_split_observer observer;
     observer.attach(_arr);
-    Kernel *ker = &traits;
-    verticalDecomposition(*ker);
+    _pKer = &traits;
+    verticalDecomposition(*_pKer);
     observer.detach();
     _arr.unbounded_face()->set_contained(true);
 
@@ -79,6 +92,10 @@ ConfigCheck::ConfigCheck( const Polygon_2&          outer_obstacle,
 bool 
 ConfigCheck::isLegalMove( const TSMove& mv ) 
 {
+    bool bLocalFree = squaresFree( mv );
+    if( !bLocalFree )
+        return false;
+    
     Segment_2 querySegment( mv.src_pt_, mv.dst_pt_ );
 
     vector<CGAL::Object> vecZoneElems;
@@ -91,6 +108,44 @@ ConfigCheck::isLegalMove( const TSMove& mv )
         return false;
     }
 
+    return true;
+}
+
+bool
+ConfigCheck::squaresFree( const TSMove& mv )
+{
+    Segment_2 segs1[4] = { Segment_2(mv.src_pt_, mv.dst_pt_),
+                           Segment_2(mv.src_pt_+ Vector_2(1,0), mv.dst_pt_+ Vector_2(1,0)),
+                           Segment_2(mv.src_pt_+ Vector_2(1,1), mv.dst_pt_+ Vector_2(1,1)),
+                           Segment_2(mv.src_pt_+ Vector_2(0,1), mv.dst_pt_+ Vector_2(0,1)) };
+    Segment_2 segs2[4] = { Segment_2(mv.obs_pt_, mv.obs_pt_ + Vector_2(1,0)),
+                           Segment_2(mv.obs_pt_ + Vector_2(1,0), mv.obs_pt_ + Vector_2(1,1)),
+                           Segment_2(mv.obs_pt_ + Vector_2(1,1), mv.obs_pt_ + Vector_2(0,1)),
+                           Segment_2(mv.obs_pt_ + Vector_2(0,1), mv.obs_pt_ ) };
+    for( int i = 0; i < 4; ++i )
+    {
+        for( int j = 0; j < 4; ++j )
+        {
+            CGAL::cpp11::result_of<Intersect_2(Segment_2, Segment_2)>::type
+                result = intersection(segs1[i], segs2[j]);
+            if( result ) 
+            {
+                if (const Segment_2* s = boost::get<Segment_2>(&*result)) 
+                {
+                    continue; 
+                } 
+                else 
+                {
+                    const Point_2* p = boost::get<Point_2 >(&*result);
+                    if( !eps_eq( *p, segs1[i].source() ) && 
+                        !eps_eq( *p, segs2[j].source() ) && 
+                        !eps_eq( *p, segs1[i].target() ) &&
+                        !eps_eq( *p, segs2[j].target() ) )
+                        return false;
+                }
+            }
+        }
+    }
     return true;
 }
 

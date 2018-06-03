@@ -42,6 +42,7 @@ endif ()
 
 set(SOURCE_FILES ConfigCheck.h ConfigCheck.cpp TSPathFinder.h TSPathFinder.cpp main.cpp CGAL_defines.h)
 add_executable(MotionPlanningForTwoRobots ${SOURCE_FILES})
+add_executable(TestConfigCheck TestConfigCheck.cpp ConfigCheck.h ConfigCheck.cpp TSPathFinder.h TSPathFinder.cpp CGAL_defines.h)
 
 add_to_cached_list(CGAL_EXECUTABLE_TARGETS MotionPlanningForTwoRobots)
 
