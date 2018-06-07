@@ -10,9 +10,8 @@
 
 #include "CGAL_defines.h"
 
-#define NUM_OF_POINTS_PER_SQUARE 100
-#define RADIUS 1.5
-#define STEP_QUERIES 100
+#define NUM_OF_POINTS_PER_SQUARE 10
+#define RADIUS 1
 
 using namespace std;
 
@@ -41,12 +40,12 @@ public:
     bool visited = false;
     double heuristic=-1;
     double distance = 0;
-    bool robotAMoved = false;
 };
 
 struct Edge{
     cPoint *from, *to;
     double distance;
+    bool robotAMoved;
 };
 
 class TSPathFinder
@@ -70,15 +69,15 @@ private:
     void setFaceRandomPoints(Face_handle face);
     double heuristic(cPoint *cp);
     double cPointDistance(cPoint *a, cPoint *b);
+    Point_2 getClosestPoint(Point_2 start, Point_2 end, Point_2 stady);
 
-    void addEdge(cPoint *current, Point_2 robotA, Point_2 robotB);
+    void addEdge(cPoint *current, Point_2 robotA, Point_2 robotB, bool robotAmoved);
     void addNeighbors(cPoint *current);
 
     bool isConfigurationLegal(cPoint *current);
     bool isEdgeLegal(Edge edge);
 
 
-    void printArr();
 public:
     TSPathFinder( const Polygon_2& outer_poly,
                   const vector<Polygon_2>& obstacles );

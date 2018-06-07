@@ -67,26 +67,34 @@ int main(int argc, char *argv[]) {
     auto outer_obstacle = loadPolygon(inputObstaclesFile);
     auto obstacles = loadPolygons(inputObstaclesFile);
     inputObstaclesFile.close();
+    try {
 
-    boost::timer timer;
-    auto result = findPath(startPoint1, endPoint1, startPoint2, endPoint2, outer_obstacle, obstacles);
-    auto secs = timer.elapsed();
-    cout << "Path created:      " << secs << " secs" << endl;
 
-    ofstream outputFile;
-    outputFile.open(argv[3]);
-    if (!outputFile.is_open()) {
-        cerr << "ERROR: Couldn't open file: " << argv[3] << endl;
-        return -1;
+        boost::timer timer;
+        auto result = findPath(startPoint1, endPoint1, startPoint2, endPoint2, outer_obstacle, obstacles);
+        auto secs = timer.elapsed();
+        cout << "Path created:      " << secs << " secs" << endl;
+
+        ofstream outputFile;
+        outputFile.open(argv[3]);
+        if (!outputFile.is_open()) {
+            cerr << "ERROR: Couldn't open file: " << argv[3] << endl;
+            return -1;
+        }
+        outputFile << result.size() << endl;
+        for (auto &p : result) {
+            outputFile << p.first.x().to_double()
+                       << " " << p.first.y().to_double()
+                       << " " << p.second.x().to_double()
+                       << " " << p.second.y().to_double()
+                       << endl;
+        }
+        outputFile.close();
     }
-    outputFile << result.size() << endl;
-    for (auto &p : result) {
-        outputFile << p.first.x()//.to_double()
-                   << " " << p.first.y()//.to_double()
-                   << " " << p.second.x()//.to_double()
-                   << " " << p.second.y()//.to_double()
-                   << endl;
+    catch (const char* c)
+    {
+        cout << "ERROR: " << c << endl;
+        return 0;
     }
-    outputFile.close();
     return 0;
 }
