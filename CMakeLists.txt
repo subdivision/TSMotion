@@ -40,8 +40,8 @@ endif ()
 set(SOURCE_FILES
         CGAL_defines.h
         main.cpp
-        TSPathFinder.cpp
-        TSPathFinder.h)
+        PathFinder.cpp
+        PathFinder.h)
 
 add_executable(MotionPlanningForTwoRobots ${SOURCE_FILES})
 

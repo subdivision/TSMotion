@@ -4,7 +4,7 @@
 #include <vector>
 #include <boost/timer.hpp>
 #include "CGAL_defines.h"
-#include "TSPathFinder.h"
+#include "PathFinder.h"
 using namespace std;
 
 
@@ -39,7 +39,7 @@ vector<Polygon_2> loadPolygons(ifstream &is) {
 vector<pair<Point_2, Point_2>> findPath(const Point_2 &start1, const Point_2 &end1,
                                         const Point_2 &start2, const Point_2 &end2,
                                         const Polygon_2 &outer_obstacle, vector<Polygon_2> &obstacles) {
-    TSPathFinder finder(outer_obstacle, obstacles);
+    PathFinder finder(outer_obstacle, obstacles);
     if(finder.findPath(start1, end1, start2, end2))
         return finder.fetchPath();
     throw "no path found";
