@@ -1,7 +1,4 @@
-# Created by the script cgal_create_CMakeLists
-# This is the CMake script for compiling a set of CGAL applications.
-
-project(MotionPlanningForTwoRobots)
+project(TSMotion)
 
 cmake_minimum_required(VERSION 2.8.11)
 set(CMAKE_CXX_STANDARD 14)
@@ -40,9 +37,13 @@ endif ()
 # Creating entries for target: executable
 # ############################
 
-set(SOURCE_FILES ConfigCheck.h ConfigCheck.cpp TSPathFinder.h TSPathFinder.cpp main.cpp CGAL_defines.h)
+set(SOURCE_FILES
+        CGAL_defines.h
+        main.cpp
+        TSPathFinder.cpp
+        TSPathFinder.h)
+
 add_executable(MotionPlanningForTwoRobots ${SOURCE_FILES})
-add_executable(TestConfigCheck TestConfigCheck.cpp ConfigCheck.h ConfigCheck.cpp TSPathFinder.h TSPathFinder.cpp CGAL_defines.h)
 
 add_to_cached_list(CGAL_EXECUTABLE_TARGETS MotionPlanningForTwoRobots)
 

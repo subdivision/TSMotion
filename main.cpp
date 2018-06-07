@@ -36,12 +36,13 @@ vector<Polygon_2> loadPolygons(ifstream &is) {
     return ret;
 }
 
-vector<pair<Point_2, Point_2>>
-findPath(const Point_2 &start1, const Point_2 &end1, const Point_2 &start2, const Point_2 &end2,
-         const Polygon_2 &outer_obstacle, vector<Polygon_2> &obstacles) {
-    // TODO: implement this function :)
+vector<pair<Point_2, Point_2>> findPath(const Point_2 &start1, const Point_2 &end1,
+                                        const Point_2 &start2, const Point_2 &end2,
+                                        const Polygon_2 &outer_obstacle, vector<Polygon_2> &obstacles) {
     TSPathFinder finder(outer_obstacle, obstacles);
-    return finder.findPath(start1, end1, start2, end2);
+    if(finder.findPath(start1, end1, start2, end2))
+        return finder.fetchPath();
+    throw "no path found";
 }
 
 int main(int argc, char *argv[]) {
@@ -80,10 +81,10 @@ int main(int argc, char *argv[]) {
     }
     outputFile << result.size() << endl;
     for (auto &p : result) {
-        outputFile << p.first.x()//.to_double() 
-                   << " " << p.first.y()//.to_double() 
+        outputFile << p.first.x()//.to_double()
+                   << " " << p.first.y()//.to_double()
                    << " " << p.second.x()//.to_double()
-                   << " " << p.second.y()//.to_double() 
+                   << " " << p.second.y()//.to_double()
                    << endl;
     }
     outputFile.close();
