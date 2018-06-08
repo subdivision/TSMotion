@@ -53,7 +53,6 @@ void PathFinder::addEdge(cPoint *current, Point_2 robotA, Point_2 robotB, bool r
         temp = &(cMap[pp]);
     }
 
-
     if(temp->heuristic < 0 )
         temp->heuristic = heuristic(temp);
     double newDistance = current->distance + cPointDistance(current, temp) + temp->heuristic;
@@ -85,8 +84,6 @@ void PathFinder::addNeighbors(cPoint *current) {
             numOfEdgesB++;
         }
     }
-    //cout << "num added edges " << numOfEdgesA << " B " << numOfEdgesB << endl;
-
 }
 
 bool PathFinder::findPath( const Point_2& s1, const Point_2& e1, const Point_2& s2, const Point_2& e2 )
@@ -106,22 +103,10 @@ bool PathFinder::findPath( const Point_2& s1, const Point_2& e1, const Point_2& 
     addNeighbors(&(cMap[pair<Point_2, Point_2>(s1,e1)]));
 
     while (!queue.empty()) {
-        //cout << "queue size " << queue.size() << endl;
         Edge currentEdge = queue.top();
         queue.pop();
         if(!isEdgeLegal(currentEdge))
             continue;
-
-        /*cout << "from A " <<    CGAL::to_double(currentEdge.from->robotA.x()) << " " <<
-                                CGAL::to_double(currentEdge.from->robotA.y()) << " B " <<
-                                CGAL::to_double(currentEdge.from->robotB.x()) << " " <<
-                                CGAL::to_double(currentEdge.from->robotB.y()) << " to A " <<
-                                CGAL::to_double(currentEdge.to->robotA.x()) << " " <<
-                                CGAL::to_double(currentEdge.to->robotA.y()) << " B " <<
-                                CGAL::to_double(currentEdge.to->robotB.x()) << " " <<
-                                CGAL::to_double(currentEdge.to->robotB.y()) << " ";
-        cout << (currentEdge.robotAMoved ? "A" : "B");
-        cout << endl;*/
 
         cPoint* currentCpoint = currentEdge.to;
 
