@@ -69,7 +69,6 @@ private:
     void setFaceRandomPoints(Face_handle face);
     double heuristic(cPoint *cp);
     double cPointDistance(cPoint *a, cPoint *b);
-    Point_2 getClosestPoint(Point_2 start, Point_2 end, Point_2 stady);
 
     void addEdge(cPoint *current, Point_2 robotA, Point_2 robotB, bool robotAmoved);
     void addNeighbors(cPoint *current);

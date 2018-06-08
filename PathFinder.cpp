@@ -195,25 +195,20 @@ bool PathFinder::isEdgeLegal(Edge edge) {
         if (CGAL::assign(hFace, vecZoneElems[i]) && !hFace->contained())
             return false;
     }
-    Point_2 closestPoint = getClosestPoint(startPoint, endPoint, stadyPoint);
-    return !(abs(closestPoint.x() - stadyPoint.x()) < 1 && abs(closestPoint.y()-stadyPoint.y())<1);
 
+    Point_2 p1(stadyPoint.x()-1, stadyPoint.y()-1);
+    Point_2 p2(stadyPoint.x()-1, stadyPoint.y()+1);
+    Point_2 p3(stadyPoint.x()+1, stadyPoint.y()+1);
+    Point_2 p4(stadyPoint.x()+1, stadyPoint.y()-1);
+
+    Segment_2 s1(p1,p2), s2(p2,p3), s3(p3,p4), s4(p4,p1);
+
+    Segment_2 qry(startPoint, endPoint);
+
+    return !(CGAL::do_intersect(s1, qry) || CGAL::do_intersect(s2, qry) ||
+            CGAL::do_intersect(s3, qry) || CGAL::do_intersect(s4, qry));
 
 }
-
-Point_2 PathFinder::getClosestPoint(Point_2 start, Point_2 end, Point_2 stady) {
-    Vector_2 AB(start, end);
-    Vector_2 AP(start, stady);
-    double lengthSqrAB = CGAL::to_double(AB.x() * AB.x() + AB.y() * AB.y());
-    double t = CGAL::to_double(AP.x() * AB.x() + AP.y() * AB.y()) / lengthSqrAB;
-    if(t < 0)
-        t = 0;
-    if(t > 1)
-        t = 1;
-
-    return start + AB * t;
-}
-
 
 bool PathFinder::isConfigurationLegal(cPoint *current) {
     return !(abs(current->robotA.x() - current->robotB.x()) < 1 && abs(current->robotA.y()-current->robotB.y())<1);
