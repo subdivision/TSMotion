@@ -5,4 +5,8 @@ MotionPlanningForTwoRobots
 cmake_install.cmake
 out.txt
 TestConfigCheck
-
+*.zip
+.idea/
+*.cbp
+output
+cmake-build-debug/
